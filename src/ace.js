@@ -3222,7 +3222,7 @@ function DefaultHandlers(mouseHandler) {
 
     this.focusWait = function() {
         var distance = calcDistance(this.mousedownEvent.x, this.mousedownEvent.y, this.x, this.y);
-        var time = Date.now();
+        var time = Date._now();
 
         if (distance > DRAG_OFFSET || time - this.mousedownEvent.time > this.$focusTimeout)
             this.startSelect(this.mousedownEvent.getDocumentPosition());
@@ -3811,7 +3811,7 @@ function DragdropHandler(mouseHandler) {
     event.addListener(mouseTarget, "drop", this.onDrop.bind(mouseHandler));
 
     function scrollCursorIntoView(cursor, prevCursor) {
-        var now = Date.now();
+        var now = Date._now();
         var vMovement = !prevCursor || cursor.row != prevCursor.row;
         var hMovement = !prevCursor || cursor.column != prevCursor.column;
         if (!cursorMovedTime || vMovement || hMovement) {
@@ -3830,7 +3830,7 @@ function DragdropHandler(mouseHandler) {
     }
 
     function autoScroll(cursor, prevCursor) {
-        var now = Date.now();
+        var now = Date._now();
         var lineHeight = editor.renderer.layerConfig.lineHeight;
         var characterWidth = editor.renderer.layerConfig.characterWidth;
         var editorRect = editor.renderer.scroller.getBoundingClientRect();
@@ -3942,7 +3942,7 @@ function DragdropHandler(mouseHandler) {
 (function() {
 
     this.dragWait = function() {
-        var interval = Date.now() - this.mousedownEvent.time;
+        var interval = Date._now() - this.mousedownEvent.time;
         if (interval > this.editor.getDragDelay())
             this.startDrag();
     };
@@ -4001,7 +4001,7 @@ function DragdropHandler(mouseHandler) {
         if (clickCount === 1 && button === 0 && inSelection) {
             if (e.editor.inMultiSelectMode && (e.getAccelKey() || e.getShiftKey()))
                 return;
-            this.mousedownEvent.time = Date.now();
+            this.mousedownEvent.time = Date._now();
             var eventTarget = e.domEvent.target || e.domEvent.srcElement;
             if ("unselectable" in eventTarget)
                 eventTarget.unselectable = "on";
@@ -8008,7 +8008,7 @@ var BackgroundTokenizer = function(tokenizer, editor) {
     this.$worker = function() {
         if (!self.running) { return; }
 
-        var workerStart = new Date();
+        var workerStart = Date._now();
         var currentLine = self.currentLine;
         var endLine = -1;
         var doc = self.doc;
@@ -8027,7 +8027,7 @@ var BackgroundTokenizer = function(tokenizer, editor) {
                 currentLine++;
             } while (self.lines[currentLine]);
             processedLines ++;
-            if ((processedLines % 5 === 0) && (new Date() - workerStart) > 20) {                
+            if ((processedLines % 5 === 0) && (Date._now() - workerStart) > 20) {                
                 self.running = setTimeout(self.$worker, 20);
                 break;
             }
@@ -12960,7 +12960,7 @@ Editor.$uid = 0;
 
         if (
             this.$mergeUndoDeltas != "always"
-            && Date.now() - this.sequenceStartTime > 2000
+            && Date._now() - this.sequenceStartTime > 2000
         ) {
             shouldMerge = false; // the sequence is too long
         }
@@ -12968,7 +12968,7 @@ Editor.$uid = 0;
         if (shouldMerge)
             this.session.mergeUndoDeltas = true;
         else if (mergeableCommands.indexOf(e.command.name) !== -1)
-            this.sequenceStartTime = Date.now();
+            this.sequenceStartTime = Date._now();
     };
     this.setKeyboardHandler = function(keyboardHandler, cb) {
         if (keyboardHandler && typeof keyboardHandler === "string" && keyboardHandler != "ace") {

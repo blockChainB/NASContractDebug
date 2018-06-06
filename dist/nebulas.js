@@ -1414,7 +1414,7 @@ var NebDate = function (ProtoDate) {
         return date;
     }
     NebDate._now = function () {
-        return Date.now();
+        return oldDate.now();
     };
     NebDate.now = function () {
         if (!allow()) {
@@ -1504,6 +1504,8 @@ var NebDate = function (ProtoDate) {
             throw new Error("Unsupported method!");
         }
     });
+  
+    this.oldDate=ProtoDate;
 
     Object.setPrototypeOf(NebDate.prototype, ProtoDate.prototype);
     return NebDate;

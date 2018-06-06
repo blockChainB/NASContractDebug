@@ -107,23 +107,43 @@
         };
 
         function deploy() {
-            var source = document.getElementById('contract').value;
-            var nvm = new NVM(block, transaction);
+            if(Blockchain.transaction != undefined)
+              {
+                Blockchain.transaction = {};
+                Blockchain.block = {};
+                delete Blockchain.transaction;
+                delete Blockchain.block;
+              }
+          
+            var source = editor1.getValue();
+            var param = JSON.parse(editor2.getValue());
+            var nvm = new NVM(param.block, param.transaction);
             var args = document.getElementById('deploy-args').value;
             try {
                 var result = nvm.deploy(source, args);
-                document.getElementById('contract-result').value = result;
+                document.getElementById('contract-result').value = "Succeed,No return vaule.";
             } catch (e) {
                 document.getElementById('contract-result').value = e;
             }
         }
         function call() {
-            var source = document.getElementById('contract').value;
-            var nvm = new NVM(block, transaction);
+            if(Blockchain.transaction != undefined)
+              {
+                Blockchain.transaction = {};
+                Blockchain.block = {};
+                delete Blockchain.transaction;
+                delete Blockchain.block;
+              }
+            var source = editor1.getValue();
+            var param = JSON.parse(editor2.getValue());
+            var nvm = new NVM(param.block, param.transaction);
             var func = document.getElementById('call-func').value;
             var args = document.getElementById('call-args').value;
             try {
                 var result = nvm.call(source, func, args);
+              if(result == 'undefined')
+                document.getElementById('contract-result').value = "Succeed,No return vaule.";
+              else
                 document.getElementById('contract-result').value = result;
             } catch (e) {
                 document.getElementById('contract-result').value = e;
@@ -208,27 +228,78 @@
 <br>
 -->
 <div>
-    <div>6. Click [deploy/call contract] to mock deploy/call javascript contract</div>
-    <div style="display: inline-block">
-        <div>args:</div>
-        <input type="text" id="deploy-args" placeholder="args:[]"/>
-        <button type="button" onClick="deploy();">deploy contract</button>
+  <h3>
+    mock deploy/call javascript contract
+  </h3>
+  <div style="float:left">
+    <div>
+      Deploy:
     </div>
     <div style="display: inline-block">
-        <div>func:</div>
-        <input type="text" id="call-func" placeholder="function"/>
-        <div>args:</div>
-        <input type="text" id="call-args" placeholder="args:[]"/>
-        <button type="button" onClick="call();">call contract</button>
+      <div>args:</div>
+      <input type="text" id="deploy-args" style = "width: 300px" placeholder="args:[]" />
+      <button type="button" onClick="deploy();">deploy contract</button>
     </div>
-</div>
-<div>
-    <pre id="contract">123123</pre>
+    <br>
+    <br>
+    <div>
+      Call:
+    </div>
+    <div style="display: inline-block">
+      <div>func:</div>
+      <input type="text" id="call-func" style = "width: 300px" placeholder="function" />
+      <div>args:</div>
+      <input type="text" id="call-args" style = "width: 300px" placeholder="args:[]" />
+      <button type="button" onClick="call();">call contract</button>
+    </div>
+    <br><br>
+
+    <div>
+      <div>Result:</div>
+      <textarea id="contract-result"></textarea>
+    </div>
+  </div>
+  <div style="float:left;width: 700px;height: 240px;margin : 0px 0px 0px 5px;">
+    <div>
+      Param:
+    </div>
+    <pre id="param">
+    {
+        "block" : {
+            "timestamp": 0,
+            "height": 1
+        },
+
+        "transaction" : {
+            "hash": "2933836c3a56ddd789464c7bd3fd92bdb1c974ac62f7b38a34bc48eb33679f52",
+            "from": "",
+            "to": "",
+            "value": "10",
+            "nonce": 1,
+            "timestamp": 1527077193,
+            "gasPrice": "1000000",
+            "gasLimit": "20000"
+        }
+     }
+    </pre>
     <div class="scrollmargin"></div>
+  </div>
+
+  <div style="clear: both;"></div>
+
+
 </div>
+
+<br>
+<br>
+  
 <div>
-    <div>result:</div>
-    <textarea id="contract-result"></textarea>
+  <div>
+    Contract:
+  </div>
+
+  <pre id="contract"></pre>
+  <div class="scrollmargin"></div>
 </div>
 
 <!-- load ace -->
@@ -243,6 +314,16 @@
         minLines: 50
     });
     editor1.renderer.setScrollMargin(10, 10, 10, 10);
+  
+    var editor2 = ace.edit("param", {
+        theme: "ace/theme/tomorrow_night_eighties",
+        mode: "ace/mode/javascript",
+        wrap: true,
+        autoScrollEditorIntoView: true,
+        maxLines: 18,
+        minLines: 18,
+    });
+    editor2.renderer.setScrollMargin(10, 10, 10, 10);
 </script>
 
 </body>

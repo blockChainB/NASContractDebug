@@ -1413,6 +1413,9 @@ var NebDate = function (ProtoDate) {
         Object.setPrototypeOf(date, NebDate.prototype);
         return date;
     }
+    NebDate._now = function () {
+        return Date.now();
+    };
     NebDate.now = function () {
         if (!allow()) {
             Date.now();

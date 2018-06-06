@@ -3127,7 +3127,7 @@ function DefaultHandlers(mouseHandler) {
             return;
         }
 
-        this.mousedownEvent.time = Date.now();
+        this.mousedownEvent.time = Date._now();
         if (inSelection && !editor.isFocused()) {
             editor.focus();
             if (this.$focusTimeout && !this.$clickSelection && !editor.inMultiSelectMode) {
